@@ -1,27 +1,47 @@
 #include <iostream>
+#include <string>
+#include <vector>
 
-double getInput(const std::string& assetName){
+double getInput(const std::string& assetName) {
     double value;
     std::cout << "Enter the " << assetName << " held: \n";
     std::cin >> value;
+    if (std::cin.fail()) {
+        throw std::runtime_error("Invalid input. Please enter a numeric value.");
+    }
     return value;
 }
-double calculateTotalAsset(){
-    double cash = getInput("Cash");
-    double deposits = getInput("Deposits");
-    double federalFundsAndSecurties = getInput("Federal Funds Sold & Securities Purchased");
-    double securitiesBorrowed = getInput("Securities Borrowed");
-    double tradingAssets = getInput("Trading Assets");
-    double securities = getInput("Securities");
-    double loans = getInput("Loans");
-    double accuredInterest = getInput("Accured Interest");
-    double ppAnde = getInput("PP&E");
-    double goodwill = getInput("Goodwill");
-    double other = getInput("Other Assets");
-    double totalAssets = cash+deposits+federalFundsAndSecurties+securitiesBorrowed+tradingAssets+securities+loans+accuredInterest+ppAnde+goodwill+other;
-    std::cout << totalAssets << '\n';
+
+double calculateTotalAsset() {
+    std::vector<std::string> assetNames = {
+        "Cash",
+        "Deposits",
+        "Federal Funds Sold & Securities Purchased",
+        "Securities Borrowed",
+        "Trading Assets",
+        "Securities",
+        "Loans",
+        "Accrued Interest",
+        "PP&E",
+        "Goodwill",
+        "Other Assets"
+    };
+
+    double totalAssets = 0.0;
+    for (const auto& assetName : assetNames) {
+        double assetValue = getInput(assetName);
+        totalAssets += assetValue;
+    }
+    return totalAssets;
 }
-int main(){
-    double totalAssets = calculateTotalAsset();
-    std::cout << "Total assets: " << totalAssets << std::endl;
+
+int main() {
+    try {
+        double totalAssets = calculateTotalAsset();
+        std::cout << "Total assets: " << totalAssets << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << "Error: " << e.what() << std::endl;
+        return 1;
+    }
+    return 0;
 }
